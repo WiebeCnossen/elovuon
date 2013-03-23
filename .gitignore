@@ -1,0 +1,9 @@
+*.db
+*.Cache
+*.log
+*.suo
+*.user
+*.bak
+bin
+obj
+tools

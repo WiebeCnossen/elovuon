@@ -1,0 +1,158 @@
+> mydata <- read.csv("D:\\dotnet\\Elovuon\\Theory\\elo\\elo.csv")
+> summary(glm(result ~ diff, data = mydata, family = "binomial"))
+
+Call:
+glm(formula = result ~ diff, family = "binomial", data = mydata)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.2807  -0.7049   0.0685   0.7432   3.1963  
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) 1.891e-01  2.068e-03   91.47   <2e-16 ***
+diff        5.177e-03  1.277e-05  405.43   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1041081  on 1144844  degrees of freedom
+Residual deviance:  825234  on 1144843  degrees of freedom
+AIC: 1414003
+
+Number of Fisher Scoring iterations: 4
+
+Warning message:
+In eval(expr, envir, enclos) : non-integer #successes in a binomial glm!
+> summary(glm(loss ~ diff, data = mydata, family = "binomial"))
+
+Call:
+glm(formula = loss ~ diff, family = "binomial", data = mydata)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.3150  -0.7822  -0.5009   0.8671   3.7890  
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -1.124e+00  2.489e-03  -451.8   <2e-16 ***
+diff        -6.041e-03  1.472e-05  -410.3   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1374578  on 1144844  degrees of freedom
+Residual deviance: 1141962  on 1144843  degrees of freedom
+AIC: 1141966
+
+Number of Fisher Scoring iterations: 5
+
+> summary(glm(win ~ diff, data = mydata, family = "binomial"))
+
+Call:
+glm(formula = win ~ diff, family = "binomial", data = mydata)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.4280  -0.8546  -0.5255   0.9816   3.7279  
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -6.845e-01  2.264e-03  -302.3   <2e-16 ***
+diff         6.128e-03  1.413e-05   433.6   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1512697  on 1144844  degrees of freedom
+Residual deviance: 1248894  on 1144843  degrees of freedom
+AIC: 1248898
+
+Number of Fisher Scoring iterations: 4
+
+> summary(glm(result ~ white + black + sqdiff, data = mydata, family = "binomial"))
+
+Call:
+glm(formula = result ~ white + black + sqdiff, family = "binomial", 
+    data = mydata)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.0910  -0.7044   0.0729   0.7418   3.1069  
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -1.318e-01  2.435e-02  -5.414 6.16e-08 ***
+white       -1.759e-04  1.440e-04  -1.222   0.2217    
+black        3.144e-04  1.444e-04   2.177   0.0295 *  
+sqdiff       1.205e-06  3.201e-08  37.640  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1041081  on 1144844  degrees of freedom
+Residual deviance:  823723  on 1144841  degrees of freedom
+AIC: 1413591
+
+Number of Fisher Scoring iterations: 4
+
+Warning message:
+In eval(expr, envir, enclos) : non-integer #successes in a binomial glm!
+> summary(glm(loss ~ white + black + sqdiff, data = mydata, family = "binomial"))
+
+Call:
+glm(formula = loss ~ white + black + sqdiff, family = "binomial", 
+    data = mydata)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.0892  -0.7589  -0.4907   0.8464   3.6584  
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  1.763e+00  2.773e-02   63.57   <2e-16 ***
+white        2.903e-03  1.554e-04   18.68   <2e-16 ***
+black       -4.153e-03  1.587e-04  -26.17   <2e-16 ***
+sqdiff      -2.115e-06  3.518e-08  -60.12   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1374578  on 1144844  degrees of freedom
+Residual deviance: 1130678  on 1144841  degrees of freedom
+AIC: 1130686
+
+Number of Fisher Scoring iterations: 5
+
+> summary(glm(win ~ white + black + sqdiff, data = mydata, family = "binomial"))
+
+Call:
+glm(formula = win ~ white + black + sqdiff, family = "binomial", 
+    data = mydata)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-3.4716  -0.8374  -0.5201   0.9638   3.7276  
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept)  1.158e+00  2.579e-02   44.92   <2e-16 ***
+white       -5.231e-03  1.519e-04  -34.44   <2e-16 ***
+black        4.434e-03  1.497e-04   29.61   <2e-16 ***
+sqdiff       2.432e-06  3.370e-08   72.16   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1 
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1512697  on 1144844  degrees of freedom
+Residual deviance: 1240745  on 1144841  degrees of freedom
+AIC: 1240753
+
+Number of Fisher Scoring iterations: 4
+

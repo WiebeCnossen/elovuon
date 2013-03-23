@@ -1,0 +1,226 @@
+Giri Anish	2722
+Vachier-Lagrave Maxime	2715
+Navara David	2710
+Cheparinov Ivan	2709
+Ding Liren	2709
+Yu Yangyi	2688
+So Wesley	2684
+Eljanov Pavel	2678
+Bu Xiangzhi	2675
+Gajewski Grzegorz	2644
+Sokolov Ivan	2644
+Socko Bartosz	2643
+Jones Gawain C B	2637
+Amin Bassem	2631
+Kuzubov Yuriy	2622
+L'ami Erwin	2622
+Baklan Vladimir	2609
+Solak Dragan	2603
+Dziuba Marcin	2602
+Ipatov Alexander	2569
+Oleksienko Mikhailo	2568
+Grandelius Nils	2566
+Halkias Stelios	2566
+Esen Baris	2565
+Shulman Yury	2563
+Maze Sebastien	2556
+Kveinys Aloyzas	2533
+Yilmaz Mustafa	2531
+Xiu Deshun	2530
+Gretarsson Hjorvar Steinn	2509
+Danielsen Henrik	2507
+Wei Yi	2501
+Williams Simon K	2498
+Stefansson Hannes	2496
+Kristjansson Stefan	2486
+Smith Axel	2485
+Huang Qian	2478
+Urkedal Frode	2473
+Hambleton Aman	2472
+Lou Yiping	2468
+Tan Zhongyi	2466
+Andersen Mads	2462
+Krush Irina	2460
+Thorhallsson Throstur	2441
+Schreiner Peter	2439
+Bartholomew John	2435
+Norowitz Yaacov	2432
+Guo Qi	2431
+Kjartansson Gudmundur	2430
+Mikkelsen Nikolaj	2421
+Zumsande Martin	2419
+Olafsson Fridrik	2416
+Guramishvili Sopiko	2414
+Hagen Andreas Skytte	2411
+Li Wenliang	2411
+Diermair Andreas	2407
+Ris Robert	2407
+Bekker-Jensen Simon	2405
+Thorfinnsson Bjorn IM	2386
+Arngrimsson Dagur	2375
+Wang Jue	2375
+Mammadova Gulnar	2369
+Handler Lukas	2369
+Miedema David	2364
+L'ami Alina	2362
+Kislik Erik Andrew	2359
+Kashlinskaya Alina	2350
+Bewersdorff Oliver	2335
+Gislason Gudmundur	2329
+Kvisvik Brede	2314
+Muir Andrew J	2313
+Saduakassova Dinara	2312
+Cherednichenko Svetlana	2307
+Andreasen Per Naesby	2302
+Prosviriakov Vladimir	2297
+Cubas Pons Juan Miguel	2284
+Malmdin Nils-Ake	2281
+Mamedjarova Turkan	2280
+Wahlbom Magnus	2279
+Ekeberg Carl Fredrik	2274
+Jayakumar Adarsh	2271
+Ptacnikova Lenka	2269
+Tari Aryan	2263
+Borsos Bogdan	2260
+Thompson Ian D	2260
+Beeke Bob	2257
+Schou-Moldt Thomas	2236
+Karason Askell O	2235
+Steindorsson Sigurdur P.	2235
+Wang Yiye	2226
+Bird Andrew	2223
+Halldorsson Jon Arni	2222
+Omarsson Dadi	2212
+Van Weersel Arlette	2211
+Valenti Giuseppe	2204
+Frisk Ellinor	2197
+Bergsson Stefan	2180
+Halldorsson Bragi	2180
+Ornolfsson Magnus P.	2169
+Ingvason Johann	2148
+Thorhallsson Gylfi	2141
+Maack Kjartan	2136
+Newrkla Katharina	2135
+Bjarnason Saevar	2133
+Bjerke Richard	2131
+Herbold Manfred	2125
+Bergthorsson Jon Thor	2125
+Van Heirzeele Daniel	2125
+Drill Frank	2124
+Johansen Stian	2090
+Palsson Halldor	2078
+Frick Renato	2075
+Raddatz Michael	2075
+Knútsson Lárus	2072
+Christiansen Johan-Sebastian	2071
+Mihajlov Svetoslav	2071
+Marentini Marcel	2069
+Mihajlov Sebastian	2059
+Heerde Thomas	2053
+Palmqvist Fredrik	2050
+Ragnarsson Johann	2046
+Doell Detlef	2044
+Thorsteinsdottir Gudlaug	2041
+Haraldsson Leif	2028
+Murray Michael A.	2017
+Isaksson Per	2016
+Rodriguez Fonseca Jorge	2009
+Michel Steve	2008
+Gunnarsson Sigurdur Jon	2000
+Pretterhofer Kiaras	1997
+Andreasen Jakup A.R.	1992
+Kleinert Juergen	1991
+Karlsson Mikael Johann	1990
+Sverrisson Nokkvi	1990
+Johannesson Oliver	1988
+Ofstad Sigurd	1985
+Vigfusson Vigfus	1985
+Karlsson Robin	1980
+Orlova Yelizaveta	1978
+Newrkla Alexander	1969
+Ragnarsson Dagur	1961
+Thorsteinsdottir Hallgerdur	1960
+Bjornes Leif	1957
+Birgisson Ingvar Orn	1953
+Johannsson Orn Leo	1953
+Meier Gerd	1949
+Kuehnast Volker	1936
+Saemundsson Bjarni	1935
+Herda Christoph Dr.	1915
+Helin Mikael	1910
+Jensen Soren	1909
+Leimeister Winfried	1909
+Mehringer Joerg	1908
+Roberts Lynda	1903
+Maggason Oskar	1903
+Merkesvik Sondre	1903
+Schadd Jan	1899
+Jablon Stephen	1896
+Klug Christian	1894
+Fivelstad Jon Olav	1888
+Ingason Sigurdur	1878
+Eliasson Kristjan Orn	1873
+Johannsdottir Johanna Bjorg	1872
+Finnbogadottir Tinna Kristin	1871
+Jonsson Olafur Gisli	1870
+Egilsson Fridrik Orn	1861
+Masson Kjartan	1856
+Hardarson Jon Trausti	1853
+Arntsen Frode	1840
+Traustason Ingi Tandri	1840
+Ghaderi Arman K	1827
+de Winter Eric	1823
+Johansen Arnt-Ole	1817
+Ohlsson Mikael	1811
+Bauza Mercere Eduardo	1809
+Hyotyla Tapio	1792
+Birgisdottir Ingibjorg	1783
+Hisnay Gregory	1778
+Bjeglerud Jarle	1774
+Thorgeirsson Jon Kristinn	1766
+Leifsson Thorsteinn	1759
+Storesund Henrik	1759
+Bakkes Frits	1750
+Kristinardottir Elsa Maria	1747
+Leosson Atli Johann	1736
+Hojgaard Brandur	1734
+Holm Fridgeir K	1733
+Billot Daniel	1731
+Seim Fredrik	1714
+Evenson Kent	1709
+Ontiveros John	1700
+Bue Gunnar	1695
+Heimisson Hilmir Freyr	1693
+Pantzar Milton	1693
+Hauksdottir Hrund	1671
+Ramtin Raman	1661
+Stefansson Vignir Vatnar	1652
+Kolka Dawid	1646
+Kruglyak Mikhail	1638
+Kjartansson Dagur	1623
+Einarsson Oskar Long	1613
+Jacobsen Trond	1610
+Petersson Baldur Teodor	1575
+Magnusdottir Veronika Steinun	1557
+Vignisson Ingvar Egill	1542
+Jonsson Gauti Pall	1519
+Smith Chris P	1506
+Hilmarsson Andri Steinn	1500
+Davidsdottir Nansy	1479
+Gjertsen Petter	1472
+Bodvarsson Bodvar	1455
+Thorhallsson Simon	1451
+Steinthorsson Felix	1449
+Sundsbo Sigve	1398
+Palsdottir Soley Lind	1393
+Petersen Jakob Alexander	1370
+Ragnarsson Heimir Pall	1354
+Hrafnsson Hilmir	1331
+Bakkejord Odd Vidar	1274
+Kolica Donika	1251
+Kristbergsson Bjorgvin	1197
+Laitamaa Tore Johan Melker	1161
+Bragason Gudmundur Agnar	1092
+Davidsson Oskar Vikingur	1017
+Johannesson Petur	1000
+Magnusson Thorsteinn	1000
