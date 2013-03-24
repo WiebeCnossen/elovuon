@@ -45,6 +45,8 @@
     <Compile Include="Stats.fs" />
     <Compile Include="Contestant.fs" />
     <Compile Include="Graph.fs" />
+    <Compile Include="Pairing.fs" />
+    <Compile Include="Tournament.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

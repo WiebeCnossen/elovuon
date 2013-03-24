@@ -20,14 +20,16 @@ let tournaments =
       "cappelle2013", 9
     ]
 
-let read rounds precision tournament =
-  sprintf @"%s\%s.txt" root tournament
-  |> System.IO.File.ReadAllLines
-  |> Array.choose (fun line ->
-     match line.Split [| '\t' |] with
-     | [| name; elo |] -> Some (name, int elo)
-     | _ -> None)
-  |> Array.mapi (fun i p -> new Contestant(p, (i % 2 = 0, 0), i + 1, rounds, precision))
+let read rounds alias algorithm =
+  let contestants =
+    sprintf @"%s\%s.txt" root alias
+    |> System.IO.File.ReadAllLines
+    |> Array.choose (fun line ->
+       match line.Split [| '\t' |] with
+       | [| name; elo |] -> Some (name, int elo)
+       | _ -> None)
+    |> Array.mapi (fun i p -> new Contestant(p, (i % 2 = 0, 0), i + 1, rounds))
+  new Tournament<_>(alias, contestants, rounds, algorithm)
 
 let randomGraph seed m n =
   let rng = new System.Random(seed)
