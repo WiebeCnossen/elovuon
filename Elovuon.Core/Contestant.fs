@@ -8,14 +8,16 @@ type ColorPreference = bool * int
 module Option =
   let choose f = function None -> None | Some x -> f x
 
-type Contestant(player:Player, pref:ColorPreference, ?rank, ?rounds) =
+type Contestant(player:Player, pref:ColorPreference, ?startingRank, ?rounds) =
   let rounds = defaultArg rounds 0
   let games = new List<_>()
   let mutable pref = pref
   let mutable tpr = snd player
   let mutable value = snd player
   let mutable points = 0.0
-  member contestant.Rank with get() = defaultArg rank 0
+  let mutable rank = defaultArg startingRank 0
+  member contestant.StartingRank with get() = defaultArg startingRank 0
+  member contestant.Rank with get() = rank and set v = rank <- v
   member contestant.Name with get() = fst player
   member contestant.Elo with get() = snd player
   member contestant.Score = points
@@ -50,6 +52,10 @@ type Contestant(player:Player, pref:ColorPreference, ?rank, ?rounds) =
       if games.Count = 0 then 0 else
       let elos = games |> Seq.map (fun (o,_) -> float o.Elo)
       (Seq.average elos |> Math.Round |> int) - contestant.Tpr
+  member contestant.Competition
+    with get() =
+      if games.Count = 0 then Double.NaN else
+      games |> Seq.averageBy (fun (other,_) -> contestant.Rank - other.Rank |> abs |> float)
   static member Zero with get() = new Contestant((Guid.NewGuid().ToString(),0), (false,0))
   interface System.IComparable<Contestant> with
     member contestant.CompareTo (other:Contestant) = contestant.Name.CompareTo other.Name
@@ -65,4 +71,4 @@ type Contestant(player:Player, pref:ColorPreference, ?rank, ?rounds) =
       | :? Contestant as o -> (contestant :> System.IEquatable<Contestant>).Equals o
       | _ -> false
   override contestant.GetHashCode() = contestant.Name.GetHashCode()
-  override contestant.ToString() = sprintf "%-20s %3d" contestant.Name contestant.Rank
+  override contestant.ToString() = sprintf "%-20s %3d" contestant.Name contestant.StartingRank
