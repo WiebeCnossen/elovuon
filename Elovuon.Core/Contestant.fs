@@ -24,7 +24,8 @@ type Contestant(player:Player, pref:ColorPreference, ?rank, ?rounds) =
   member contestant.Pref with get() = pref
   member contestant.Offset with get() = contestant.Value - contestant.Elo
   member contestant.Order with get() = - value, - points
-  member contestant.HasPlayed (other: Contestant) = games.Exists (new Predicate<_>(fst >> (=) other))
+  member contestant.HasPlayed (other: Contestant) =
+    games.Exists (new Predicate<_>(fst >> (=) other))
   member contestant.Play (other: Contestant) (black: bool) (score: float) =
     games.Add (other, (black, score))
     pref <- match pref with
@@ -39,6 +40,16 @@ type Contestant(player:Player, pref:ColorPreference, ?rank, ?rounds) =
       Seq.append played expected
       |> Stats.tpr
     points <- points + score
+  member contestant.Spread
+    with get() =
+      if games.Count = 0 then 0 else
+      let elos = games |> Seq.map (fun (o,_) -> o.Elo)
+      Seq.max elos - Seq.min elos
+  member contestant.Match
+    with get() =
+      if games.Count = 0 then 0 else
+      let elos = games |> Seq.map (fun (o,_) -> float o.Elo)
+      (Seq.average elos |> Math.Round |> int) - contestant.Tpr
   static member Zero with get() = new Contestant((Guid.NewGuid().ToString(),0), (false,0))
   interface System.IComparable<Contestant> with
     member contestant.CompareTo (other:Contestant) = contestant.Name.CompareTo other.Name

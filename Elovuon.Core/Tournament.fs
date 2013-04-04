@@ -15,10 +15,11 @@ and Tournament<'order when 'order : comparison>(alias:string, contestants, round
   member tournament.Played with get() = played
   member tournament.Rounds with get() = rounds
   member tournament.Play (white:Contestant) (black:Contestant) result =
-    white.Play black true result
-    black.Play white false (1.0 - result)
+    let weight = algorithm.GetWeight tournament white black 
+    white.Play black false result
+    black.Play white true (1.0 - result)
     let d = match result with 0.0 -> "0-1" | 0.5 -> "rem" | _ -> "1-0"
-    printfn "%O - %O : %s" white black d
+    printfn "%O - %O : %s (%A)" white black d weight
   member tournament.GetPairing() : (Contestant * Contestant) list =
     let getWeights (contestant:Contestant) =
       contestant,
@@ -39,7 +40,8 @@ and Tournament<'order when 'order : comparison>(alias:string, contestants, round
     |> Pairing.getPairing
     |> List.sortBy (fun (a,b) -> min (algorithm.GetOrder a) (algorithm.GetOrder b))
 
-  member tournament.FinishRound() = played <- played + 1
+  member tournament.FinishRound() =
+    played <- played + 1
   member tournament.PrintStandings() =
     printfn "------------------------"
     printfn "Standings after round %d" tournament.Played
@@ -48,6 +50,18 @@ and Tournament<'order when 'order : comparison>(alias:string, contestants, round
     printfn "------------------------"
     for contestant in contestants |> Seq.sortBy algorithm.GetOrder do
       printfn "%4d %4d %3.1f %-20s %4d %4d" contestant.Value contestant.Tpr contestant.Score contestant.Name contestant.Rank contestant.Elo
+    if played = rounds then
+      printfn "------------------------"
+      algorithm.GetType().Name |> printfn "Evaluation of %O"
+      printfn "------------------------"
+      let n = 10
+      [0..n]
+      |> List.iter (fun i ->
+         let contestant =
+           contestants
+           |> Seq.sortBy algorithm.GetOrder
+           |> Seq.nth (i * (count - 1) / n)
+         printfn "%O (%+5d) : %4d %+5d" contestant contestant.Offset contestant.Spread contestant.Match)
 
 module Algorithms =
   type ElovuonAlgorithm() =
@@ -61,7 +75,7 @@ module Algorithms =
       | _, 1 -> Some 0.3
       | _ -> None
     override algorithm.GetWeight tournament contestant other =
-      if tournament.Rounds > 2 * abs (contestant.Rank - other.Rank) then None else
+      if tournament.Rounds - tournament.Played > 2 * abs (contestant.Rank - other.Rank) then None else
       getPenalty (tournament.Played >= tournament.Rounds - 2) contestant.Pref false
       |> Option.choose (fun lp ->
          getPenalty (tournament.Played >= tournament.Rounds - 2) other.Pref true
@@ -74,21 +88,23 @@ module Algorithms =
 
   type SwissAlgorithm() =
     inherit Algorithm<float * int>()
-    let getPenalty (lb, ln) b =
+    let getPenalty higher (lb, ln) b =
       if lb = b then Some 0.0 else
+      let d = if higher then 0.01 else -0.01
       match ln with
-      | 0 -> Some 0.1
-      | 1 -> Some 0.3
+      | 0 -> 0.1 + d |> Some
+      | 1 -> 0.23 + d |> Some
       | _ -> None
     override algorithm.GetWeight tournament contestant other =
-      getPenalty contestant.Pref false
+      let higher = contestant.Rank < other.Rank
+      getPenalty higher contestant.Pref false
       |> Option.choose (fun lp ->
-         getPenalty other.Pref true
+         getPenalty (not higher) other.Pref true
          |> Option.map (fun rp ->
             let rank =  contestant.Rank - other.Rank |> abs |> float
             let swiss = contestant.Score - other.Score |> abs
             let penalty = lp + rp
-            0.1 * rank / float tournament.Count - swiss - penalty))
+            0.01 * rank / float tournament.Count - swiss - penalty))
     override algorithm.GetOrder (contestant:Contestant) = -contestant.Score, contestant.Rank
 
   let Elovuon = new ElovuonAlgorithm() :> Algorithm<int * float>
