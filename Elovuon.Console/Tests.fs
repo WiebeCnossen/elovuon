@@ -7,12 +7,12 @@ let private root = @"D:\dotnet\Elovuon\Data"
 let tournaments =
   if false then
     [ "mini", 5 ]
-  elif true then
+  elif false then
     [
       "forni2012", 9
       "reykjavik2013", 3
     ]
-  elif true then
+  elif false then
     [
       "sj", 9
       "weekend2011", 6

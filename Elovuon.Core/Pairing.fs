@@ -63,8 +63,8 @@ let private minWeight (weights : (Contestant * (float * (Contestant * bool)) lis
     let mi = (hi + lo) / 2
     if solves values.[mi] then inner mi hi else inner lo mi
   let best = weights |> List.map (fun (_,a) -> fst a.[0]) |> List.min
-  let hi = System.Array.BinarySearch(values, best)
-  if solves values.[hi] then inner hi (hi+1) else inner 0 hi
+  System.Array.BinarySearch(values, best) + 1
+  |> inner 0
 
 let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list) =
   let rec inner lower pairing =
