@@ -164,10 +164,7 @@ module Graph =
            | Forest (forest, vertices) -> inner forest vertices
            | Nothing -> None 
        
-    let exposed =
-      (graphNodes graph |> set) - (matchingNodes matching |> set)
-      |> Set.toList
-      |> List.sortBy (fun v -> getLinked v graph |> List.length)
+    let exposed = (graphNodes graph |> set) - (matchingNodes matching |> set) |> Set.toList
     let forest = exposed |> List.map (fun v -> v, [v])
     inner forest exposed
 
