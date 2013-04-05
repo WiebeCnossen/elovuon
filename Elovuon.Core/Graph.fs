@@ -164,7 +164,10 @@ module Graph =
            | Forest (forest, vertices) -> inner forest vertices
            | Nothing -> None 
        
-    let exposed = (graphNodes graph |> set) - (matchingNodes matching |> set) |> Set.toList
+    let exposed =
+      (graphNodes graph |> set) - (matchingNodes matching |> set)
+      |> Set.toList
+      |> List.sortBy (fun v -> getLinked v graph |> List.length)
     let forest = exposed |> List.map (fun v -> v, [v])
     inner forest exposed
 
@@ -217,19 +220,14 @@ module Graph =
 
     | None ->
       let chunks = getChunks graph
-      if chunks |> List.sumBy (fun chunk -> List.length chunk / 2) < List.length graph / 2 then None else
-      if List.length chunks > 1 then
-        let rec sub matching =
-          function
-          | [] -> Some matching
-          | chunk::t ->
-            leaveNodes chunk graph
-            |> findPerfectMatching
-            |> Option.choose (fun next -> sub (next @ matching) t)
-        List.sortBy List.length chunks
-        |> sub []
-      else
-        let initial = initialMatching graph
-        if List.length initial = List.length graph / 2 then Some initial else
-        printf "?"
-        inner initial
+      if chunks |> List.sumBy (fun chunk -> List.length chunk / 2) < List.length graph / 2 then None
+      elif List.length chunks = 1 then initialMatching graph |> inner else
+      let rec sub matching =
+        function
+        | [] -> Some matching
+        | chunk::t ->
+          leaveNodes chunk graph
+          |> findPerfectMatching
+          |> Option.choose (fun next -> sub (next @ matching) t)
+      List.sortBy List.length chunks
+      |> sub []

@@ -97,7 +97,7 @@ let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list
                 a
                 |> Seq.takeWhile (fun (w,(x,_)) -> w < we + infoTolerance)
                 |> Seq.exists (fun (_,(x,_)) -> x = q)))
-        List.length pairs + 1 |> printfn "*%d"
+        List.length pairs + 1 |> printf "%d"
         (x,y)::pairs
         |> List.map (fun (x,y) ->
            let w,(_,black) = getWeight (x,y)
@@ -111,7 +111,7 @@ let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list
       let mw,uw = minWeight weights
       match getPrios mw uw weights with
       | [ (_,(x,y)),black ] ->
-        printfn "*1"
+        printf "-"
         (if black then y,x else x,y) :: pairing |> inner mw
       | prios -> prios |> List.map fst |> List.pick (fun (w,e) -> sub mw e)
     | a ->
@@ -120,7 +120,10 @@ let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list
         |> Seq.map (fun (c,w) -> let _,(o,b) = w.[0] in if b then o,c else c,o)
         |> Seq.distinct
         |> List.ofSeq
-      List.length pairs |> printfn "*%d"
+      List.length pairs |> printf "+%d"
       pairs @ pairing |> inner lower
 
-  inner Double.MinValue []
+  try
+    inner Double.MinValue []
+  finally
+    printfn ""
