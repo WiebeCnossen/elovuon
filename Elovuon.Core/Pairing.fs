@@ -11,7 +11,7 @@ let private getPrios lo hi weights =
      |> List.choose (fun (w,(o,b)) ->
         if w < lo || w >= hi then None else
         let edge = Graph.edge c o
-        Some ((-w, -a.Length), ((w, edge), if fst edge = c then b else not b))
+        Some ((-w, a.Length), ((w, edge), if fst edge = c then b else not b))
         ))
   |> Seq.sort
   |> Seq.map snd
