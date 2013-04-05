@@ -8,7 +8,7 @@ let private logit intercept alphas xs =
   1. + Math.Exp -u |> (/) 1.
 
 let private random =
-  let seed = (new Random()).Next 100000
+  let seed = 12345//(new Random()).Next 100000
   printfn "Seed = %d" seed
   let rng = new Random(seed)
   rng.NextDouble

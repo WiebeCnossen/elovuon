@@ -54,21 +54,17 @@ let private minWeight (weights : (Contestant * (float * (Contestant * bool)) lis
     |> Graph.findPerfectMatching
     |> Option.isSome
     
-  let rec inner lo hi =
-    let upper = if hi < values.Length then values.[hi] else Double.MaxValue
-    if lo = hi - 1 then values.[lo], upper else
+  let rec inner lo hi =    
+    if lo = hi - 1
+    then
+      values.[lo],
+      if hi < values.Length then values.[hi] else Double.MaxValue
+    else
     let mi = (hi + lo) / 2
     if solves values.[mi] then inner mi hi else inner lo mi
-  let lo,hi =
-    let poor = weights |> List.minBy (fun (_,a) -> fst a.[0], a.Length) |> snd |> List.map fst
-    Seq.append poor [values.[0]]
-    |> Seq.distinct
-    |> Seq.scan (fun (_,hi) lv ->
-       if solves lv then Some lv, hi
-       else None, System.Array.BinarySearch(values, lv)) (None, System.Array.BinarySearch(values, poor.[0]) + 1)
-    |> Seq.pick (function None,_ -> None | Some lv, hi -> Some (System.Array.BinarySearch(values, lv), hi))
-  printf "!"
-  inner lo hi
+  let best = weights |> List.map (fun (_,a) -> fst a.[0]) |> List.min
+  let hi = System.Array.BinarySearch(values, best)
+  if solves values.[hi] then inner hi (hi+1) else inner 0 hi
 
 let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list) =
   let rec inner lower pairing =

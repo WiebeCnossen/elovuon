@@ -12,6 +12,13 @@ let tournaments =
       "forni2012", 9
       "reykjavik2013", 3
     ]
+  elif true then
+    [
+      "sj", 9
+      "weekend2011", 6
+      "forni2012", 9
+      "reykjavik2013", 10
+    ]
   else
     [
       "sj", 9
