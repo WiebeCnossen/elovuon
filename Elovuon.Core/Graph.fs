@@ -109,10 +109,7 @@ module Graph =
              | Some l when List.length l % 2 = 0 -> s
              | Some l when getLast l = root ->
                let root, blossom = getBlossom path l
-               let dummy =
-                 match (typeof<'n>).GetProperty("Zero") with
-                 | null -> match 0 :> obj with :? 'n as n -> n | _ -> failwith "wrong type 1"
-                 | prop -> match prop.GetValue(null) with :? 'n as n -> n | _ -> failwith "wrong type 2"
+               let dummy = Contestant.Dummy :> obj :?> 'n
                let sg = replaceBlossom l path dummy graph
                let link = match List.skipWhile ((<>) root) l with _::w::t -> Some (edge dummy w) | _ -> None
                let sm =
@@ -201,11 +198,14 @@ module Graph =
        connected :: disconnected) []
 
   let rec findPerfectMatching graph =
+    let target = List.length graph / 2
+    let tryPerfect f matching =
+      if List.length matching = target then Some matching else f matching
+
     let rec inner matching =
-      if List.length matching = List.length graph / 2 then Some matching else
       match findAugmentingPath graph matching with
       | None -> None
-      | Some path -> applyPath matching path |> inner
+      | Some path -> applyPath matching path |> tryPerfect inner
 
     if graph |> List.exists (snd >> List.isEmpty) then None else
     match graph |> List.tryPick (function v, [w] -> edge v w |> Some | _ -> None) with
@@ -216,15 +216,19 @@ module Graph =
       |> Option.map (fun sub -> edge v w :: sub)
 
     | None ->
-      let chunks = getChunks graph
-      if chunks |> List.sumBy (fun chunk -> List.length chunk / 2) < List.length graph / 2 then None
-      elif List.length chunks = 1 then initialMatching graph |> inner else
-      let rec sub matching =
-        function
-        | [] -> Some matching
-        | chunk::t ->
-          leaveNodes chunk graph
-          |> findPerfectMatching
-          |> Option.choose (fun next -> sub (next @ matching) t)
-      List.sortBy List.length chunks
-      |> sub []
+      let chunked initial =
+        let chunks = getChunks graph
+        if chunks |> List.sumBy (fun chunk -> List.length chunk / 2) < target then None
+        elif List.length chunks = 1 then inner initial else
+        let rec sub matching =
+          function
+          | [] -> Some matching
+          | chunk::t ->
+            leaveNodes chunk graph
+            |> findPerfectMatching
+            |> Option.choose (fun next -> sub (next @ matching) t)
+        List.sortBy List.length chunks
+        |> sub []
+
+      initialMatching graph
+      |> tryPerfect chunked

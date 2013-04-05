@@ -56,7 +56,7 @@ type Contestant(player:Player, pref:ColorPreference, ?startingRank, ?rounds) =
     with get() =
       if games.Count = 0 then Double.NaN else
       games |> Seq.averageBy (fun (other,_) -> contestant.Rank - other.Rank |> abs |> float)
-  static member Zero with get() = new Contestant((Guid.NewGuid().ToString(),0), (false,0))
+  static member Dummy with get() = new Contestant((Guid.NewGuid().ToString(),0), (false,0))
   interface System.IComparable<Contestant> with
     member contestant.CompareTo (other:Contestant) = contestant.Name.CompareTo other.Name
   interface System.IEquatable<Contestant> with
