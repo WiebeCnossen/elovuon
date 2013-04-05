@@ -48,7 +48,6 @@ let private minWeight (weights : (Contestant * (float * (Contestant * bool)) lis
     let weights = weights |> limit w
     let m = weights |> List.map (snd >> List.length) |> List.max
     if weights |> List.exists (snd >> List.isEmpty) then false else
-    printf "?"
     weights
     |> weights2graph
     |> Graph.findPerfectMatching

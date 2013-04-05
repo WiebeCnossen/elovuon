@@ -15,6 +15,20 @@ module List =
       function h::t when f h -> inner (h::a) t | _ -> List.rev a
     inner []
   let contains x = List.exists ((=) x)
+  let rec intersects x y =
+    match x, y with
+    | [], _ | _, [] -> false
+    | hx::tx, hy::ty ->
+      if hx = hy then true else
+      if hx < hy then intersects tx y else intersects x ty
+  let rec merge x y =
+    let rec inner a x y =
+      match x, y with
+      | [], l | l, [] -> List.rev a @ l
+      | hx::tx, hy::ty when hx = hy -> inner (hx::a) tx ty
+      | hx::tx, hy::ty when hx < hy -> inner (hx::a) tx y
+      | hx::tx, hy::ty -> inner (hy::a) x ty
+    inner [] x y
 
 module Graph =
   let edge v w = if v < w then v, w else w, v
@@ -43,6 +57,12 @@ module Graph =
     |> List.choose (fun (v, l) ->
        if vs.Contains v then None
        else Some (v, l |> List.filter (vs.Contains >> not)))
+  let leaveNodes vl graph =
+    let vs = set vl
+    graph
+    |> List.choose (fun (v, l) ->
+       if vs.Contains v |> not then None
+       else Some (v, l |> List.filter vs.Contains))
 
   let rec private getLast = function h::[] -> h | h::t -> getLast t | _ -> failwith "empty list"
   let private tryGetLinked vertex graph = graph |> List.tryPick (fun (v, l) -> if v = vertex then Some l else None)
@@ -167,6 +187,19 @@ module Graph =
     |> List.sortBy (snd >> List.length)
     |> initial Set.empty []
 
+  let getChunks (graph:Graph<_>) =
+    graph
+    |> List.fold (fun chunks (v,e) ->
+       let current = v :: e |> List.sort
+       let classified =
+         current :: chunks
+         |> List.map (fun chunk ->
+            List.intersects current chunk,
+            chunk)
+       let disconnected = classified |> List.filter (fst >> not) |> List.map snd
+       let connected = classified |> List.filter fst |> List.map snd |> List.reduce List.merge
+       connected :: disconnected) []
+
   let rec findPerfectMatching graph =
     let rec inner matching =
       if List.length matching = List.length graph / 2 then Some matching else
@@ -182,4 +215,21 @@ module Graph =
       |> findPerfectMatching
       |> Option.map (fun sub -> edge v w :: sub)
 
-    | None -> initialMatching graph |> inner
+    | None ->
+      let chunks = getChunks graph
+      if chunks |> List.sumBy (fun chunk -> List.length chunk / 2) < List.length graph / 2 then None else
+      if List.length chunks > 1 then
+        let rec sub matching =
+          function
+          | [] -> Some matching
+          | chunk::t ->
+            leaveNodes chunk graph
+            |> findPerfectMatching
+            |> Option.choose (fun next -> sub (next @ matching) t)
+        List.sortBy List.length chunks
+        |> sub []
+      else
+        let initial = initialMatching graph
+        if List.length initial = List.length graph / 2 then Some initial else
+        printf "?"
+        inner initial

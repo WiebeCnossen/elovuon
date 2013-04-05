@@ -77,5 +77,3 @@ let nearGraph m n o =
   [0..m-1]
   |> List.collect (fun i -> [i+1+o..min (i+n+o) (m-1)] |> List.map (Graph.edge i))
   |> Graph.fromEdges
-
-
