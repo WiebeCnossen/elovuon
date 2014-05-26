@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elovuon.Console", "Elovuon.Console\Elovuon.Console.fsproj", "{38106EA4-3805-4279-A6FE-B49EF3578955}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Elovuon.Core", "Elovuon.Core\Elovuon.Core.fsproj", "{ED377CE8-8720-4836-9D93-A3030CE906C3}"
