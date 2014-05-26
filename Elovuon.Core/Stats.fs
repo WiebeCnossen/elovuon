@@ -1,6 +1,23 @@
 ﻿module Elovuon.Stats
 open System
 
+let private fideIntervals =
+  [| 0; 4; 11; 18; 26; 33; 40; 47; 54; 62; 69; 77; 84; 92; 99; 107; 114; 122; 130; 138; 146; 154; 163;
+     171; 180; 189; 198; 207; 216; 226; 236; 246; 257; 268; 279; 291; 303; 316; 329; 345; 358; 375;
+     392; 412; 433; 457; 485; 518; 560; 620; 736 |]
+
+let private fide limit white black =
+  let rev = black > white
+  let diff = if rev then black-white else white-black
+  let diff = min diff limit
+  let b = Array.BinarySearch(fideIntervals, diff)
+  let i = if b >= 0 then b else (~~~b) - 1
+  let e = float (50 + i) / 100.
+  if rev then 1. - e else e
+
+let fideExp = fide 1000
+let fideRat = fide 400
+
 let private logit intercept alphas xs =
   let u =
     List.zip alphas xs
@@ -60,7 +77,7 @@ let simulate white black =
   if r < l + w then 1.
   else 0.5
 
-let tpr (games : (Elo * bool * float) seq) =
+let tprcalc (score : int -> int -> float) (games : (Elo * bool * float) seq) =
   if Seq.isEmpty games then failwith "No games" else
   let n, s = games |> Seq.fold (fun (n,s) (_,_,r) -> n+1, s+r) (0, 0.)
   if s = 0. then (games |> Seq.map (fun (elo,_,_) -> elo) |> Seq.min) - 720 else
@@ -74,3 +91,5 @@ let tpr (games : (Elo * bool * float) seq) =
          else score mid elo)
     tm - s
   binarySearch estimator (0, -s) (4000, float n - s)
+
+let tpr : (Elo * bool * float) seq -> int = tprcalc score
