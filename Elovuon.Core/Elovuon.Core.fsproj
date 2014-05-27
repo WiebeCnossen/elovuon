@@ -50,6 +50,7 @@
     <Compile Include="Graph.fs" />
     <Compile Include="Pairing.fs" />
     <Compile Include="Tournament.fs" />
+    <Compile Include="TestTournament.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

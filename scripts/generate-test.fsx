@@ -22,5 +22,5 @@ let tournament players rounds =
         simulate ratings.[i-1] ratings.[j-1]
         |> fprintfn out "%d-%d %3.1f" i j
 
-for players, rounds in [ 10,5 ; 13,7 ; 26,9 ] do
+for players, rounds in [ 10,5 ; 13,7 ; 14,11 ; 26,9 ] do
   tournament players rounds
