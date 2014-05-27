@@ -21,7 +21,7 @@ type TestTournament<'order when 'order : comparison>(alias, contestants, rounds,
       tournament.FinishRound()
       tournament.PrintStandings()
 
-  static member Read (algorithm: Algorithm<'order>) file =
+  static member Read (algorithm: Algorithm<_, 'order>) file =
     let alias = Path.GetFileNameWithoutExtension file
     use input = File.OpenText file
 

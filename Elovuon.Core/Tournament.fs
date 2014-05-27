@@ -2,11 +2,11 @@
 open System
 
 [<AbstractClass>]
-type Algorithm<'order when 'order : comparison>() =
-  abstract member GetWeight : Tournament<'order> -> Contestant -> Contestant -> float option
+type Algorithm<'weight, 'order when 'weight : comparison and 'order : comparison>() =
+  abstract member GetWeight : Tournament<'order> -> Contestant -> Contestant -> 'weight option
   abstract member GetOrder : Contestant -> 'order
 
-and Tournament<'order when 'order : comparison>(alias:string, contestants, rounds, algorithm: Algorithm<'order>) =
+and Tournament<'order when 'order : comparison>(alias:string, contestants, rounds, algorithm: Algorithm<_, 'order>) =
   let contestants = List.ofSeq contestants
   let count = List.length contestants
   let mutable played = 0
@@ -68,7 +68,7 @@ and Tournament<'order when 'order : comparison>(alias:string, contestants, round
 
 module Algorithms =
   type ElovuonAlgorithm() =
-    inherit Algorithm<int * float>()
+    inherit Algorithm<float, int * float>()
     let getPenalty last (lb, ln) b =
       if lb = b then Some 0.0 else
       match last, ln with
@@ -90,7 +90,7 @@ module Algorithms =
     override algorithm.GetOrder (contestant:Contestant) = -contestant.Value, -contestant.Score
 
   type SwissAlgorithm() =
-    inherit Algorithm<float * int>()
+    inherit Algorithm<float, float * int>()
     let getPenalty higher (lb, ln) b =
       if lb = b then Some 0.0 else
       let d = if higher then 0.01 else -0.01
@@ -110,5 +110,5 @@ module Algorithms =
             0.01 * rank / float tournament.Count - swiss - penalty))
     override algorithm.GetOrder (contestant:Contestant) = -contestant.Score, contestant.StartingRank
 
-  let Elovuon = new ElovuonAlgorithm() :> Algorithm<int * float>
-  let Swiss = new SwissAlgorithm() :> Algorithm<float * int>
+  let Elovuon = new ElovuonAlgorithm() :> Algorithm<float, int * float>
+  let Swiss = new SwissAlgorithm() :> Algorithm<float, float * int>
