@@ -16,6 +16,11 @@ type Contestant(player:Player, pref:ColorPreference, ?startingRank, ?rounds) =
   let mutable value = snd player
   let mutable points = 0.0
   let mutable rank = defaultArg startingRank 0
+  let score black =
+    function
+    | WhiteWins -> 0.
+    | Draw -> 0.5
+    | BlackWins -> 1.
   member contestant.StartingRank with get() = defaultArg startingRank 0
   member contestant.Rank with get() = rank and set v = rank <- v
   member contestant.Name with get() = fst player
@@ -28,20 +33,20 @@ type Contestant(player:Player, pref:ColorPreference, ?startingRank, ?rounds) =
   member contestant.Order with get() = - value, - points
   member contestant.HasPlayed (other: Contestant) =
     games.Exists (new Predicate<_>(fst >> (=) other))
-  member contestant.Play (other: Contestant) (black: bool) (score: float) =
-    games.Add (other, (black, score))
+  member contestant.SetResult (other: Contestant) (black: bool) (result: Result) =
+    games.Add (other, (black, result))
     pref <- match pref with
             | _, 0 -> not black, 1
             | c, 1 when c = black -> not c, 0
             | c, n when c = black -> c, n - 1
             | c, n -> c, n + 1
-    let played = games |> Seq.map (fun (o:Contestant,(b,s)) -> o.Elo, b, s)
+    let played = games |> Seq.map (fun (o:Contestant,(b,r)) -> o.Elo, b, score b r)
     tpr <- Stats.tpr played
     value <-
       let expected = Seq.init (rounds - games.Count |> max 0) (fun _ -> contestant.Elo, false, Stats.score contestant.Elo contestant.Elo)
       Seq.append played expected
       |> Stats.tpr
-    points <- points + score
+    points <- points + score black result
   member contestant.Spread
     with get() =
       if games.Count = 0 then 0 else

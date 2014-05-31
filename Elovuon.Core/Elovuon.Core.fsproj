@@ -49,6 +49,8 @@
     <Compile Include="Contestant.fs" />
     <Compile Include="Graph.fs" />
     <Compile Include="Pairing.fs" />
+    <Compile Include="Algorithm.fs" />
+    <Compile Include="Algorithms.fs" />
     <Compile Include="Tournament.fs" />
     <Compile Include="TestTournament.fs" />
   </ItemGroup>

@@ -3,8 +3,8 @@
 open System.IO
 open System.Text.RegularExpressions
 
-type TestTournament<'weight, 'order when 'weight : comparison and 'order : comparison>(alias, contestants, rounds, algorithm, results : Map<int*int,float>) =
-  inherit Tournament<'weight, 'order>(alias, contestants, rounds, algorithm)
+type TestTournament(alias, contestants, rounds, algorithm, results : Map<int*int,Result>) =
+  inherit Tournament(alias, contestants, rounds, algorithm)
 
   member tournament.Simulate() =
     printfn "------------------------"
@@ -17,7 +17,7 @@ type TestTournament<'weight, 'order when 'weight : comparison and 'order : compa
       m
       |> Seq.iter (fun (w,b) ->
          results.[w.StartingRank, b.StartingRank]
-         |> tournament.Play w b)
+         |> tournament.SetResult w b)
       tournament.FinishRound()
       tournament.PrintStandings()
 
@@ -43,11 +43,14 @@ type TestTournament<'weight, 'order when 'weight : comparison and 'order : compa
          new Contestant(player, (rank % 2 = 0, 0), rank, rounds))
 
     let results =
-      let parse (s:string) =
+      let parseContestants (s:string) =
         let a = s.Split('-')
         int a.[0], int a.[1]
+      let parseResult =
+        float
+        >> function 0. -> BlackWins | 0.5 -> Draw | 1. -> WhiteWins | r -> failwithf "No such result %f" r
       count * (count-1)
-      |> readMany parse float
+      |> readMany parseContestants parseResult
       |> Map.ofList
 
     alias, contestants, rounds, results

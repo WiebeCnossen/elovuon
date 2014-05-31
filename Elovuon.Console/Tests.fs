@@ -38,7 +38,7 @@ let read rounds alias algorithm =
        | [| name; elo |] -> Some (name, int elo)
        | _ -> None)
     |> Array.mapi (fun i p -> new Contestant(p, (i % 2 = 0, 0), i + 1, rounds))
-  new Tournament<_,_>(alias, contestants, rounds, algorithm)
+  new Tournament(alias, contestants, rounds, algorithm)
 
 let randomGraph seed m n =
   let rng = new System.Random(seed)
