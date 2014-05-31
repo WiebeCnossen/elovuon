@@ -11,6 +11,8 @@ type Tournament(alias:string, contestants, rounds, algorithm: Algorithm) =
   member tournament.SetResult (white:Contestant) (black:Contestant) result =
     white.SetResult black false result
     black.SetResult white true result
+    let d = match result with BlackWins -> "0-1" | Draw -> "rem" | WhiteWins -> "1-0"
+    printfn "%O - %O : %s" white black d
   member tournament.GetPairing() : (Contestant * Contestant) list =
     algorithm.GetPairing rounds played contestants
 

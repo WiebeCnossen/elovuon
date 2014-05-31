@@ -16,12 +16,14 @@ type Contestant(player:Player, pref:ColorPreference, ?startingRank, ?rounds) =
   let mutable value = snd player
   let mutable points = 0.0
   let mutable rank = defaultArg startingRank 0
-  let score black =
-    function
-    | WhiteWins -> 0.
-    | Draw -> 0.5
-    | BlackWins -> 1.
+  let mutable groupRank = 0
+  let score black result =
+    match black, result with
+    | true, WhiteWins | false, BlackWins -> 0.
+    | _, Draw -> 0.5
+    | true, BlackWins | false, WhiteWins -> 1.
   member contestant.StartingRank with get() = defaultArg startingRank 0
+  member contentant.GroupRank with get() = groupRank and set value = groupRank <- value
   member contestant.Rank with get() = rank and set v = rank <- v
   member contestant.Name with get() = fst player
   member contestant.Elo with get() = snd player

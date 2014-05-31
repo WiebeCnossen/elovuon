@@ -13,11 +13,14 @@ type internal WeightedGraphAlgorithm<'weight, 'score when 'weight : comparison a
   inherit Algorithm()
   abstract member GetScore: Contestant -> 'score
   override algorithm.GetScoreLine contestant = algorithm.GetScore contestant :> obj |> string
-  override algorithm.CompareScore left right = compare (algorithm.GetScore left) (algorithm.GetScore left)
+  override algorithm.CompareScore left right = compare (algorithm.GetScore left) (algorithm.GetScore right)
   abstract member MinWeight: 'weight
   abstract member MaxWeight: 'weight
   abstract member GetWeight : int -> int -> Contestant -> Contestant -> 'weight option
+  abstract member InitializePairing : Contestant list -> unit
+  default algorithm.InitializePairing contestants = ()
   override algorithm.GetPairing rounds played contestants =
+    algorithm.InitializePairing contestants
     let getWeights (contestant:Contestant) =
       contestant,
       contestants
@@ -63,24 +66,39 @@ type internal ElovuonAlgorithm() =
   override algorithm.GetScore (contestant:Contestant) = -contestant.Value, -contestant.Score
 
   type internal SwissGraphAlgorithm() =
-    inherit WeightedGraphAlgorithm<bool * float, float * int>()
-    let getPenalty higher (lb, ln) b =
-      if lb = b then Some 0.0 else
-      let d = if higher then 0.01 else -0.01
-      match ln with
-      | 0 -> 0.1 + d |> Some
-      | 1 -> 0.23 + d |> Some
-      | _ -> None
-    override altorithm.MinWeight with get() = false, Double.MinValue
-    override altorithm.MaxWeight with get() = true, Double.MaxValue
-    override algorithm.GetWeight _ _ contestant other =
-      let higher = contestant.StartingRank < other.StartingRank
-      getPenalty higher contestant.Pref false
-      |> Option.choose (fun lp ->
-         getPenalty (not higher) other.Pref true
-         |> Option.map (fun rp ->
-            let rank =  contestant.StartingRank - other.StartingRank |> abs |> float
-            let swiss = contestant.Score - other.Score |> abs
-            let penalty = lp + rp
-            false, 0.01 * rank / 50. - swiss - penalty))
+    inherit WeightedGraphAlgorithm<float * bool * bool * int * float * int, float * int>()
+    override algorithm.MinWeight with get() = Double.MinValue, false, false, Int32.MinValue, Double.MinValue, Int32.MinValue
+    override algorithm.MaxWeight with get() = Double.MaxValue, true, true, Int32.MaxValue, Double.MaxValue, Int32.MaxValue
+    override algorithm.GetWeight rounds played contestant other =
+      let topScorer =
+        (rounds = played + 1) &&
+        (contestant.Score > float played / 2. || other.Score > float played / 2.)
+      let prefs = [ contestant.Pref, false; other.Pref, true ]
+      let absolutePref =
+        prefs
+        |> List.forall (fun ((pc,pn), c) -> pc = c || pn < 2)
+      if not absolutePref && not topScorer then None else
+      let otherPref =
+        prefs
+        |> List.forall (fun ((pc,pn), c) -> pc = c)
+      let samePref = fst contestant.Pref = fst other.Pref
+      (
+        contestant.Score - other.Score |> abs |> (-) (float played),
+        absolutePref,
+        otherPref,
+        contestant.GroupRank - other.GroupRank |> abs,
+        contestant.Score,
+        contestant.StartingRank
+      )
+      |> Some
     override algorithm.GetScore (contestant:Contestant) = -contestant.Score, contestant.StartingRank
+    override algorithm.InitializePairing contestants =
+      contestants
+      |> Seq.groupBy (fun c -> c.Score)
+      |> Seq.map snd
+      |> Seq.collect (fun s ->
+         let l = Seq.length s
+         s
+         |> Seq.sortBy (fun c -> c.StartingRank)
+         |> Seq.zip (Seq.init l ((+) 1)))
+      |> Seq.iter (fun (i,c) -> c.GroupRank <- i)
