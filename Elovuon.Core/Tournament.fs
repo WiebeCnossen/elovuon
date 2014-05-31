@@ -3,10 +3,12 @@ open System
 
 [<AbstractClass>]
 type Algorithm<'weight, 'order when 'weight : comparison and 'order : comparison>() =
-  abstract member GetWeight : Tournament<'order> -> Contestant -> Contestant -> 'weight option
+  abstract member MinWeight: 'weight
+  abstract member MaxWeight: 'weight
+  abstract member GetWeight : Tournament<'weight, 'order> -> Contestant -> Contestant -> 'weight option
   abstract member GetOrder : Contestant -> 'order
 
-and Tournament<'order when 'order : comparison>(alias:string, contestants, rounds, algorithm: Algorithm<_, 'order>) =
+and Tournament<'weight, 'order when 'weight : comparison and 'order : comparison>(alias:string, contestants, rounds, algorithm: Algorithm<'weight, 'order>) =
   let contestants = List.ofSeq contestants
   let count = List.length contestants
   let mutable played = 0
@@ -35,9 +37,10 @@ and Tournament<'order when 'order : comparison>(alias:string, contestants, round
          if List.isEmpty weights then None else
          let weight, color = List.max weights
          Some (weight, (other, color)))
-      |> List.sortBy (fst >> (~-))
+      |> List.sortBy fst
+      |> List.rev
     List.map getWeights contestants
-    |> Pairing.getPairing
+    |> Pairing.getPairing algorithm.MinWeight algorithm.MaxWeight
     |> List.sortBy (fun (a,b) -> min (algorithm.GetOrder a) (algorithm.GetOrder b))
 
   member tournament.FinishRound() =
@@ -77,6 +80,8 @@ module Algorithms =
       | _, 0 -> Some 0.1
       | _, 1 -> Some 0.3
       | _ -> None
+    override altorithm.MinWeight with get() = Double.MinValue
+    override altorithm.MaxWeight with get() = Double.MaxValue
     override algorithm.GetWeight tournament contestant other =
       if tournament.Rounds - tournament.Played > 2 * abs (contestant.StartingRank - other.StartingRank) then None else
       getPenalty (tournament.Played >= tournament.Rounds - 2) contestant.Pref false
@@ -90,7 +95,7 @@ module Algorithms =
     override algorithm.GetOrder (contestant:Contestant) = -contestant.Value, -contestant.Score
 
   type SwissAlgorithm() =
-    inherit Algorithm<float, float * int>()
+    inherit Algorithm<bool * float, float * int>()
     let getPenalty higher (lb, ln) b =
       if lb = b then Some 0.0 else
       let d = if higher then 0.01 else -0.01
@@ -98,6 +103,8 @@ module Algorithms =
       | 0 -> 0.1 + d |> Some
       | 1 -> 0.23 + d |> Some
       | _ -> None
+    override altorithm.MinWeight with get() = false, Double.MinValue
+    override altorithm.MaxWeight with get() = true, Double.MaxValue
     override algorithm.GetWeight tournament contestant other =
       let higher = contestant.StartingRank < other.StartingRank
       getPenalty higher contestant.Pref false
@@ -107,8 +114,8 @@ module Algorithms =
             let rank =  contestant.StartingRank - other.StartingRank |> abs |> float
             let swiss = contestant.Score - other.Score |> abs
             let penalty = lp + rp
-            0.01 * rank / float tournament.Count - swiss - penalty))
+            false, 0.01 * rank / float tournament.Count - swiss - penalty))
     override algorithm.GetOrder (contestant:Contestant) = -contestant.Score, contestant.StartingRank
 
-  let Elovuon = new ElovuonAlgorithm() :> Algorithm<float, int * float>
-  let Swiss = new SwissAlgorithm() :> Algorithm<float, float * int>
+  let Elovuon = new ElovuonAlgorithm() :> Algorithm<_,_>
+  let Swiss = new SwissAlgorithm() :> Algorithm<_,_>

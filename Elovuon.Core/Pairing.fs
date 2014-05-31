@@ -1,8 +1,6 @@
 ﻿module Elovuon.Pairing
 open System
 
-let private infoTolerance = 0.0
-
 let private getPrios lo hi weights =
   if List.isEmpty weights || weights |> List.exists (snd >> List.isEmpty) then List.empty else
   weights
@@ -11,10 +9,12 @@ let private getPrios lo hi weights =
      |> List.choose (fun (w,(o,b)) ->
         if w < lo || w >= hi then None else
         let edge = Graph.edge c o
-        Some ((-w, a.Length), ((w, edge), if fst edge = c then b else not b))
+        Some ((w, -a.Length), ((w, edge), if fst edge = c then b else not b))
         ))
   |> Seq.sort
-  |> Seq.map snd
+  |> List.ofSeq
+  |> List.rev
+  |> List.map snd
   |> Seq.distinct
   |> Seq.toList
 
@@ -35,7 +35,7 @@ let private strip we (x,y) weights =
         if c = x || c = y then None else
         Some (c, List.filter (fun (w,(o,_)) -> w >= we && o <> x && o <> y) a))
 
-let private minWeight (weights : (Contestant * (float * (Contestant * bool)) list) list) =
+let private minWeight<'weight when 'weight : comparison> maxValue (weights : (Contestant * ('weight * (Contestant * bool)) list) list) =
   let values =
     weights
     |> List.collect (snd >> (List.map fst))
@@ -57,7 +57,7 @@ let private minWeight (weights : (Contestant * (float * (Contestant * bool)) lis
     if lo = hi - 1
     then
       values.[lo],
-      if hi < values.Length then values.[hi] else Double.MaxValue
+      if hi < values.Length then values.[hi] else maxValue
     else
     let mi = (hi + lo) / 2
     if solves values.[mi] then inner mi hi else inner lo mi
@@ -65,7 +65,8 @@ let private minWeight (weights : (Contestant * (float * (Contestant * bool)) lis
   System.Array.BinarySearch(values, best) + 1
   |> inner 0
 
-let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list) =
+let getPairing<'weight when 'weight : comparison> minValue maxValue (weights : (Contestant * ('weight * (Contestant * bool)) list) list) =
+//let getPairing minValue maxValue weights =
   let rec inner lower pairing =
     let paired = pairing |> List.collect (fun (o,c) -> [o;c]) |> set
     let weights =
@@ -95,7 +96,7 @@ let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list
                 if p <> c && p <> o then false else
                 let q = if p = c then o else c
                 a
-                |> Seq.takeWhile (fun (w,(x,_)) -> w < we + infoTolerance)
+                |> Seq.takeWhile (fun (w,(x,_)) -> w < we)
                 |> Seq.exists (fun (_,(x,_)) -> x = q)))
         List.length pairs + 1 |> printf "%d"
         (x,y)::pairs
@@ -108,7 +109,7 @@ let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list
 
     match weights |> List.filter (snd >> List.length >> (=) 1) with
     | [] ->
-      let mw,uw = minWeight weights
+      let mw,uw = minWeight maxValue weights
       match getPrios mw uw weights with
       | [ (_,(x,y)),black ] ->
         printf "-"
@@ -124,6 +125,6 @@ let getPairing (weights : (Contestant * (float * (Contestant * bool)) list) list
       pairs @ pairing |> inner lower
 
   try
-    inner Double.MinValue []
+    inner minValue []
   finally
     printfn ""

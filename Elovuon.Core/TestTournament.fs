@@ -3,8 +3,8 @@
 open System.IO
 open System.Text.RegularExpressions
 
-type TestTournament<'order when 'order : comparison>(alias, contestants, rounds, algorithm, results : Map<int*int,float>) =
-  inherit Tournament<'order>(alias, contestants, rounds, algorithm)
+type TestTournament<'weight, 'order when 'weight : comparison and 'order : comparison>(alias, contestants, rounds, algorithm, results : Map<int*int,float>) =
+  inherit Tournament<'weight, 'order>(alias, contestants, rounds, algorithm)
 
   member tournament.Simulate() =
     printfn "------------------------"
@@ -21,7 +21,7 @@ type TestTournament<'order when 'order : comparison>(alias, contestants, rounds,
       tournament.FinishRound()
       tournament.PrintStandings()
 
-  static member Read (algorithm: Algorithm<_, 'order>) file =
+  static member Read file =
     let alias = Path.GetFileNameWithoutExtension file
     use input = File.OpenText file
 
@@ -50,4 +50,4 @@ type TestTournament<'order when 'order : comparison>(alias, contestants, rounds,
       |> readMany parse float
       |> Map.ofList
 
-    new TestTournament<_>(alias, contestants, rounds, algorithm, results)
+    alias, contestants, rounds, results
